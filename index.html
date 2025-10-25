@@ -1,0 +1,1552 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Restaurant Menus</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#f8fafc; --card:#fff; --border:#e5e7eb; --text:#111827; --muted:#6b7280;
+      --accent:#16a34a; --accent-weak:#22c55e; --muted-bg:#f3f4f6;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab-btn{padding:10px 16px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer}
+    .tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .section{max-width:800px;margin:0 auto;padding:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,.04);padding:16px}
+    .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .title{font-size:20px;font-weight:600}
+    .tagline{font-size:13px;color:var(--muted)}
+    .totals{ text-align:right }
+    .totals .items{font-size:13px;color:#374151}
+    .totals .price{font-size:18px;font-weight:700}
+    .pill-bar{display:flex;gap:8px;overflow:auto;padding-bottom:8px;margin-bottom:16px}
+    .pill{padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:#fff;cursor:pointer;white-space:nowrap}
+    .pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .search{margin-bottom:12px}
+    .search input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px}
+    .item{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--border);border-radius:12px;padding:12px}
+    .item + .item{margin-top:10px}
+    .item .name{font-weight:600}
+    .item .price{font-size:13px;color:var(--muted)}
+    .item .desc{font-size:12px;color:#9ca3af;margin-top:4px}
+    .qty{display:flex;align-items:center;gap:8px}
+    .btn{border:1px solid var(--border);background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
+    .btn:active{transform:translateY(1px)}
+    .qty .num{width:24px;text-align:center}
+    .subtle{font-size:14px;color:var(--muted);text-align:center;padding:12px}
+    .view{margin-top:14px}
+    .view-toggle{width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--muted-bg);cursor:pointer;font-weight:600}
+    .view-box{margin-top:10px;border:1px solid var(--border);background:#f9fafb;border-radius:12px;padding:12px}
+    .view-box h3{margin:0 0 8px;font-size:15px}
+    .view-box ul{margin:0;padding-left:18px}
+    .footer{display:flex;gap:8px;margin-top:16px}
+    .cta{flex:1;text-align:center;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+    .cta.enabled{background:var(--accent);color:#fff}
+    .cta.disabled{background:#e5e7eb;color:#6b7280;cursor:not-allowed}
+    .reset{padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:#fff;cursor:pointer}
+
+   /* ===== LOOP 5 Menu Header (Sky-Blue Theme) ===== */
+:root{
+  --sky:#38bdf8;        /* sky blue accent */
+  --sky-light:#bae6fd;
+  --sky-dark:#0284c7;
+  --bg:#f0f9ff;
+  --card:#fff;
+  --border:#dbeafe;
+  --text:#0c4a6e;
+  --muted:#64748b;
+}
+
+.brand-header{
+  background:
+    radial-gradient(900px 200px at 10% 0%, rgba(56,189,248,.12), transparent 70%),
+    linear-gradient(180deg, #e0f2fe, #f8fafc);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 2px 8px rgba(56,189,248,.1);
+}
+
+.brand-shell{
+  max-width:1100px;
+  margin:0 auto;
+  padding:20px 24px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.brand-logo{
+  width:56px; height:56px; object-fit:contain;
+  border-radius:12px;
+  background:#fff;
+  padding:4px;
+  border:1px solid var(--sky-light);
+  box-shadow:0 4px 12px rgba(56,189,248,.15);
+}
+
+.brand-text{ display:flex; flex-direction:column; gap:4px; }
+
+.brand-title{
+  margin:0; line-height:1.05;
+  letter-spacing:.5px;
+}
+
+.brand-title-top{
+  font-size:clamp(22px,3.4vw,32px);
+  font-weight:800;
+  text-transform:uppercase;
+  background:linear-gradient(90deg,var(--text),var(--sky-dark));
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.brand-digit{
+  color:var(--sky);
+  -webkit-text-stroke:.5px var(--sky-dark);
+  text-shadow:0 1px 2px rgba(0,0,0,.15);
+}
+
+.brand-title-sub{
+  display:inline-block;
+  font-size:clamp(18px,2.5vw,22px);
+  font-weight:700;
+  margin-left:6px;
+  color:var(--sky-dark);
+  position:relative;
+}
+.brand-title-sub::after{
+  content:"";
+  position:absolute;
+  left:0; bottom:-6px;
+  height:4px; width:100%;
+  background:linear-gradient(90deg,var(--sky),var(--sky-light));
+  border-radius:999px;
+  opacity:.4;
+}
+
+.brand-tag{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+  letter-spacing:.3px;
+}
+
+/* animated spark lines */
+.brand-accent{
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 24px 10px;
+  display:flex;
+  gap:8px;
+}
+.spark{
+  flex:1;
+  height:3px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,var(--sky),transparent);
+  opacity:.4;
+  animation:shimmer 3.6s ease-in-out infinite;
+}
+.spark:nth-child(2){animation-delay:.6s}
+.spark:nth-child(3){animation-delay:1.2s}
+@keyframes shimmer{
+  0%,100%{opacity:.2;transform:translateX(0)scaleX(1)}
+  50%{opacity:.6;transform:translateX(5px)scaleX(1.05)}
+}
+
+/* Responsive */
+@media(max-width:520px){
+  .brand-shell{padding:16px;gap:12px}
+  .brand-logo{width:48px;height:48px;border-radius:10px}
+  .brand-tag{font-size:13px}
+}
+
+    }
+  </style>
+  <!-- ===== Header: LOOP 5 Menu ===== -->
+<header class="brand-header">
+  <div class="brand-shell">
+    <img
+      class="brand-logo"
+      src="https://files.catbox.moe/phjmdx.png"
+      alt="Loop5 logo"
+      loading="lazy"
+    />
+    <div class="brand-text">
+      <h1 class="brand-title">
+        <span class="brand-title-top">LOOP <span class="brand-digit">5</span></span>
+        <span class="brand-title-sub">Menu</span>
+      </h1>
+      <p class="brand-tag">Easier. Fairer. Local.</p>
+    </div>
+  </div>
+
+  <div class="brand-accent">
+    <span class="spark"></span>
+    <span class="spark"></span>
+    <span class="spark"></span>
+  </div>
+</header>
+
+
+  <div class="container">
+    <div class="tabs" id="tabs"></div>
+    <div class="section">
+      <div id="categoryBar" class="pill-bar"></div>
+      <div id="menuCard" class="card"></div>
+    </div>
+  </div>
+
+  <script>
+    /***********************
+     * DATA
+     ***********************/
+    const WA_NUMBER = '917619328779'; // global target
+
+    const restaurants = {
+      /* ===== Amrutha Veg ===== */
+      amrutha: {
+        label: "Amrutha Veg",
+        taglineHint: "Fresh & Tasty",
+        categories: {
+          "South Indian": [
+            
+            { id: 3102, name: "Idli 2 Nos", price: 55 },
+            { id: 3103, name: "Uddina Vada 1 No", price: 35 },
+           
+            { id: 3105, name: "2 Idli & 1 Vada", price: 85 },
+            { id: 3106, name: "Kesari Bath", price: 50 },
+            { id: 3107, name: "Khara Bath", price: 60 },
+            { id: 3108, name: "Chow Chow Bath", price: 80 },
+            { id: 3109, name: "Shavige Bath", price: 65 },
+            { id: 3110, name: "Bisibele Bath", price: 70 },
+            { id: 3111, name: "Pongal", price: 70 },
+            { id: 3112, name: "Rice Bath", price: 65 },
+            { id: 3113, name: "Chapathi 2 Nos", price: 65 },
+            { id: 3114, name: "Ghee Rice", price: 65 },
+            { id: 3115, name: "Parotta 2 Nos", price: 65 },
+            { id: 3116, name: "Poori 3 Nos", price: 65 },
+            { id: 3117, name: "Mangalore Buns 2 Nos", price: 65 },
+          ],
+          "Dosa": [
+            { id: 3120, name: "Masala Dosa", price: 75 },
+            { id: 3121, name: "Butter Plain Dosa", price: 70 },
+            { id: 3122, name: "Set Masala Dosa 2 Nos", price: 85 },
+            { id: 3123, name: "Onion Dosa", price: 85 },
+           
+            { id: 3125, name: "Butter Masala Dosa", price: 85 },
+            { id: 3126, name: "Butter Plain Dosa", price: 70 },
+            { id: 3127, name: "Set Dosa 3 Nos", price: 85 },
+ 
+            { id: 3129, name: "Ragi Dosa 2 Nos", price: 80 },
+            { id: 3130, name: "Open Masala Dosa (Butter)", price: 90 },
+            { id: 3131, name: "Special Dosa", price: 95 },
+            { id: 3132, name: "Rava Dosa", price: 85 },
+            { id: 3133, name: "Rava Onion Dosa", price: 95 },
+          ],
+          "Meals / Afternoon": [
+           
+            { id: 3141, name: "Meals (North)", price: 145 },
+            { id: 3142, name: "Rice Bath", price: 65 },
+            { id: 3143, name: "Rice Sambar", price: 65 },
+            { id: 3144, name: "Bajji / Pakoda / Vada 4 Nos", price: 50 },
+            { id: 3145, name: "Curd Rice", price: 65 },
+            { id: 3146, name: "Chapathi 2 Nos", price: 75 },
+         
+          ],
+          "North Indian": [
+            { id: 3150, name: "2 Roti with 2 Curry", price: 108 },
+            { id: 3151, name: "2 Butter Roti with 2 Curry", price: 128 },
+            { id: 3152, name: "2 Kulcha with 2 Curry", price: 108 },
+            { id: 3153, name: "2 Butter Kulcha with 2 Curry", price: 130 },
+        
+    
+            { id: 3159, name: "Veg Biriyani", price: 140 },
+          
+            { id: 3161, name: "Paneer Biriyani", price: 165 },
+            
+            { id: 3163, name: "Peas Corn Pulav", price: 135 },
+            { id: 3164, name: "Veg Hyderabadi Biriyani", price: 160 },
+            { id: 3165, name: "Mushroom Biriyani", price: 155 },
+            { id: 3166, name: "Mushroom Pulav", price: 135 },
+           
+          ],
+          "Curry": [
+            { id: 3170, name: "Dal Fry", price: 130 },
+            { id: 3171, name: "Dal Palak", price: 130 },
+            { id: 3172, name: "Green Peas Masala", price: 115 },
+            { id: 3173, name: "Veg Hyderabadi", price: 140 },
+            { id: 3174, name: "Aloo Gobi Masala", price: 140 },
+            { id: 3175, name: "Veg Kolhapuri", price: 140 },
+           
+            { id: 3177, name: "Kadai Veg", price: 155 },
+            { id: 3178, name: "Palak Paneer", price: 180 },
+            { id: 3179, name: "Paneer Butter Masala", price: 180 }, 
+            { id: 3180, name: "Kadai Paneer", price: 175 },
+            { id: 3181, name: "Mushroom Masala", price: 150 },
+            { id: 3182, name: "Special Mix Veg Curry", price: 160 },
+            { id: 3183, name: "Kaju Masala", price: 175 },
+          ],
+          "Chinese": [
+            { id: 3190, name: "Gobi Manchurian", price: 108 },
+            { id: 3191, name: "Chilli Gobi", price: 130 },
+            { id: 3192, name: "Dry Gobi", price: 100 },
+            { id: 3193, name: "Mushroom Manchurian", price: 140 },
+            { id: 3194, name: "Chilli Mushroom", price: 150 },
+            { id: 3195, name: "Chilli Baby Corn", price: 115 },
+            { id: 3196, name: "Baby Corn Manchurian", price: 130 },
+            { id: 3197, name: "Paneer Manchurian", price: 140 },
+            { id: 3198, name: "Paneer Pakoda", price: 145 },
+            { id: 3199, name: "Mushroom Pakoda", price: 145 },
+            { id: 3200, name: "Fried Rice", price: 105 },
+            { id: 3201, name: "Jeera Rice with Dal", price: 145 },
+            { id: 3202, name: "Palak Fried Rice", price: 140 },
+            { id: 3203, name: "Mushroom Fried Rice", price: 150 },
+            { id: 3204, name: "Paneer Fried Rice", price: 160 },
+            { id: 3205, name: "Schezwan Fried Rice", price: 130 },
+           
+        
+            { id: 3208, name: "Noodles", price: 108 },
+          
+          ],
+        },
+      },
+
+      /* ===== Pataka - Mannar's ===== */
+      pataka: {
+        label: "Pataka - Mannar's",
+        taglineHint: "Temporarily closed for dining",
+        categories: {
+          "Chaat Family": [
+            { id: 1001, name: "Mr Aloo Chaat", price: 79 },
+            { id: 1002, name: "Mr Aloo Puri", price: 79 },
+            { id: 1003, name: "Mr Aloo Tikki Chole", price: 89 },
+            { id: 1004, name: "Mr Chilly Dhokla", price: 79 },
+            { id: 1005, name: "Mr Cutlet Chole", price: 89 },
+            { id: 1006, name: "Mr Dahi Tikki", price: 99 },
+            { id: 1007, name: "Mr Methi Dahi Papdi Chaat", price: 99 },
+            { id: 1008, name: "Mr Pani Puri", price: 52 },
+            { id: 1009, name: "Mr Papadi Chaat Masala", price: 79 },
+            { id: 1010, name: "Mr Plain Kachori [1 Pc]", price: 37 },
+            { id: 1011, name: "Mr Plain Punjabi Aloo Samosa [1 Pc]", price: 15 },
+            { id: 1012, name: "Mr Plain Veg Cutlet [1 Pc]", price: 37 },
+            { id: 1013, name: "Mr Raj Kachori", price: 109 },
+            { id: 1014, name: "Mr Rasgulla Chaat", price: 99 },
+            { id: 1015, name: "Mr Samosa Chole", price: 89 },
+            { id: 1016, name: "Mr Suka Puri", price: 39 },
+            { id: 1017, name: "Mrs Aloo Tikki [2 Pcs]", price: 37 },
+            { id: 1018, name: "Mrs Bhel Puri", price: 79 },
+            { id: 1019, name: "Mrs Channa Masala Chaat", price: 79 },
+            { id: 1020, name: "Mrs Channa Mot Chaat", price: 79 },
+            { id: 1021, name: "Mrs Dabeli", price: 59 },
+            { id: 1022, name: "Mrs Dahi Papadi Chaat", price: 99 },
+            { id: 1023, name: "Mrs Jalmuri [Kolkata Style]", price: 79 },
+            { id: 1024, name: "Mrs Kachori Chole", price: 89 },
+            { id: 1025, name: "Mrs Lachha Tokri", price: 129 },
+            { id: 1026, name: "Mrs Palak Chaat", price: 89 },
+            { id: 1027, name: "Mrs Spring Roll", price: 79 },
+            { id: 1028, name: "Ms Churmur Chaat", price: 79 },
+            { id: 1029, name: "Ms Dahi Bhalla", price: 99 },
+            { id: 1030, name: "Ms Dahi Cutlet", price: 99 },
+            { id: 1031, name: "Ms Dahi Kachori", price: 99 },
+            { id: 1032, name: "Ms Dahi Puri", price: 99 },
+            { id: 1033, name: "Ms Dahi Samosa", price: 99 },
+            { id: 1034, name: "Ms Masala Puri", price: 59 },
+            { id: 1035, name: "Ms Methi Masala Papdi Chaat", price: 70 },
+            { id: 1036, name: "Ms Sev Puri", price: 79 },
+            { id: 1037, name: "Mysuru Special Methi Papdi Chaat", price: 99 },
+            { id: 1038, name: "Pataka Chaat", price: 79 },
+          ],
+          "Pav Family": [
+            { id: 1201, name: "Mr Extra Pav", price: 39 },
+            { id: 1202, name: "Mr Paneer Pav Bhaji", price: 149 },
+            { id: 1203, name: "Mrs Cheese Pav Bhaji", price: 149 },
+            { id: 1204, name: "Mrs Cheese Vada Pav", price: 69 },
+            { id: 1205, name: "Ms Pav Bhaji", price: 119 },
+            { id: 1206, name: "Ms Samosa Pav", price: 40 },
+            { id: 1207, name: "Ms Vada Pav", price: 42 },
+          ],
+          "Paratha Family": [
+            { id: 1301, name: "Mr Ajwain Paratha", price: 109 },
+            { id: 1302, name: "Mr Aloo Methi Paratha", price: 119 },
+            { id: 1303, name: "Mr Gobi Paratha", price: 119 },
+            { id: 1304, name: "Mr Onion Paratha", price: 119 },
+            { id: 1305, name: "Mrs Aloo Onion Paratha", price: 129 },
+            { id: 1306, name: "Mrs Cheese Corn Paratha", price: 159 },
+            { id: 1307, name: "Ms Aloo Paratha", price: 109 },
+            { id: 1308, name: "Ms Methi Paratha", price: 99 },
+          ],
+          "Sandwich Family": [
+            { id: 1401, name: "Mr Onion Chilly Sandwich", price: 99 },
+            { id: 1402, name: "Mr Paneer Chilly Sandwich", price: 129 },
+            { id: 1403, name: "Mr Veg Grill Sandwich", price: 109 },
+            { id: 1404, name: "Mrs Babycorn Grill Sandwich", price: 99 },
+            { id: 1405, name: "Mrs Cheese Grill Sandwich", price: 129 },
+            { id: 1406, name: "Ms Bhaji Grill Sandwich", price: 99 },
+            { id: 1407, name: "Ms Extra Cheese", price: 25 },
+          ],
+          "Tawa Pulav Family": [
+            { id: 1501, name: "Mr American Corn Pulav", price: 199 },
+            { id: 1502, name: "Mr Veg Pulav", price: 199 },
+            { id: 1503, name: "Ms Aloo Pulav", price: 199 },
+            { id: 1504, name: "Ms Cheese Pulav", price: 229 },
+            { id: 1505, name: "Ms Paneer Pulav", price: 219 },
+          ],
+          "Milkshake Family": [
+            { id: 1601, name: "Butter Scotch Milk Shake", price: 121.9 },
+            { id: 1602, name: "Master Ferrero Milk Shake", price: 159 },
+            { id: 1603, name: "Mr Choco Milk Shake", price: 129 },
+            { id: 1604, name: "Mr Oreo Milk Shake", price: 129 },
+            { id: 1605, name: "Mrs Kitkat Milk Shake", price: 129 },
+            { id: 1606, name: "Mrs Mango Milk Shake", price: 129 },
+            { id: 1607, name: "Ms Strawberry Milk Shake", price: 129 },
+            { id: 1608, name: "Ms Vanilla Milk Shake", price: 129 },
+          ],
+          "Mojito & Coolers Family": [
+            { id: 1701, name: "Mr Chilly Gauva Mojito", price: 99 },
+            { id: 1702, name: "Mr Lime Soda Sweet / Salt", price: 49 },
+            { id: 1703, name: "Mr Tender Coconut Mojito", price: 99 },
+            { id: 1704, name: "Mrs Litchi Cooler [Soda Base]", price: 99 },
+            { id: 1705, name: "Mrs Passion Fruit Mojito", price: 99 },
+            { id: 1706, name: "Ms Lime Juice Sweet / Salt", price: 49 },
+            { id: 1707, name: "Ms Strawberry Mojito", price: 99 },
+            { id: 1708, name: "Ms Water Melon Mojito", price: 99 },
+            { id: 1709, name: "Seasonal Fresh Juice", price: 79 },
+          ],
+          "Lassi Family": [
+            { id: 1801, name: "Mr Chocolate Lassi", price: 89 },
+            { id: 1802, name: "Mrs Mango Flv Lassi", price: 89 },
+            { id: 1803, name: "Mrs Strawberry Lassi", price: 89 },
+            { id: 1804, name: "Ms Lassi Sweet / Salt", price: 79 },
+            { id: 1805, name: "Ms Vanilla Flv Lassi", price: 89 },
+          ],
+          "Sweet Family": [
+            { id: 1901, name: "Mr Jamoon", price: 29 },
+            { id: 1902, name: "Mr Jamoon With Rabdi", price: 79 },
+            { id: 1903, name: "Mr Pure Ghee Dahi Jalebi", price: 119 },
+            { id: 1904, name: "Mrs Pure Ghee Honey Jalebi", price: 119 },
+            { id: 1905, name: "Mrs Rabdi Jalebi", price: 149 },
+            { id: 1906, name: "Mrs Shahi Tukda [Pure Ghee]", price: 129 },
+            { id: 1907, name: "Ms Malpua With Rabdi", price: 99 },
+            { id: 1908, name: "Ms Pure Ghee Jalebi 1/2 Kg", price: 579 },
+            { id: 1909, name: "Ms Pure Ghee Jalebi 1/4 Kg", price: 279 },
+            { id: 1910, name: "Ms Pure Ghee Jalebi 1 Kg", price: 1179 },
+            { id: 1911, name: "Ms Pure Ghee Jalebi Plate", price: 99 },
+            { id: 1912, name: "Mr Rabdi", price: 99 },
+          ],
+          "Extras": [{ id: 2001, name: "Pani Puri Packet (100 Nos)", price: 110 }],
+        },
+      },
+
+      /* ===== Aigiri Cafe ===== */
+      aigiri: {
+        label: "Aigiri Cafe",
+        taglineHint: "Fresh & Authentic",
+        categories: {
+          "Ghee Dosas": [
+            { id: 3001, name: "Ghee Pudi Open Masala Dosa", price: 120 },
+            { id: 3002, name: "Ghee Pudi Dosa", price: 120 },
+            { id: 3003, name: "Ghee Rava Dosa", price: 120 },
+            { id: 3004, name: "Ghee Onion Dosa", price: 120 },
+            { id: 3005, name: "Ghee Masala Dosa", price: 120 },
+            { id: 3006, name: "Ghee Plain Dosa", price: 110 },
+            { id: 3007, name: "Ghee Set Dosa", price: 110 },
+            { id: 3008, name: "Ghee Salt Dosa", price: 110 },
+            { id: 3009, name: "Ghee Paper Dosa", price: 120 },
+          ],
+          "Plain Dosas": [
+            { id: 3010, name: "Pudi Open Masala Dosa", price: 120 },
+            { id: 3011, name: "Pudi Dosa", price: 120 },
+            { id: 3012, name: "Rava Dosa", price: 120 },
+            { id: 3013, name: "Onion Dosa", price: 120 },
+            { id: 3014, name: "Masala Dosa", price: 120 },
+            { id: 3015, name: "Plain Dosa", price: 85 },
+            { id: 3016, name: "Set Dosa", price: 110 },
+            { id: 3017, name: "Salt Dosa", price: 110 },
+            { id: 3018, name: "Paper Dosa", price: 120 },
+          ],
+          "Rice": [
+            { id: 3020, name: "Chow Chow Bath", price: 80 },
+            { id: 3021, name: "Khara Bath", price: 70 },
+            { id: 3022, name: "Kesari Bath", price: 50 },
+            { id: 3023, name: "Ghee Bisibele Bath", price: 80 },
+            { id: 3024, name: "Melukote Puliyogare (morning)", price: 80 },
+            
+            { id: 3025, name: "Lemon Rice", price: 70 },
+            { id: 3026, name: "Shavige Bath", price: 75 },
+            { id: 3027, name: "Rice Bath", price: 80 },
+            { id: 3028, name: "Curd Rice", price: 80 },
+          ],
+          "Ghee Idli": [
+            { id: 3030, name: "Ghee Idly", price: 60 },
+            { id: 3031, name: "Ghee Idly and Vada", price: 80 },
+            { id: 3032, name: "Ghee Plain Thatte Idli", price: 80 },
+            { id: 3033, name: "Ghee Pudi Thatte Idli", price: 90 },
+            { id: 3034, name: "Ghee Plain Idli", price: 60 },
+            { id: 3035, name: "Ghee Pudi Idli", price: 70 },
+            { id: 3036, name: "Ghee Button Ghee Idli", price: 80 },
+          ],
+          "Idli": [
+            { id: 3040, name: "Idli (2)", price: 50 },
+            { id: 3041, name: "Plain Thatte Idli", price: 60 },
+            { id: 3042, name: "Pudi Thatte Idli", price: 70 },
+            { id: 3043, name: "Thatte Idli with Vada", price: 80 },
+            { id: 3044, name: "Mini Idli", price: 50 },
+            { id: 3045, name: "Button Ghee Idli", price: 80 },
+          ],
+          "Rotti": [
+            { id: 3050, name: "Plain Akki Rotti", price: 90 },
+            { id: 3051, name: "Ghee pudi Akki Rotti", price: 100 },
+            { id: 3052, name: "Ragi Rotti", price: 80 },
+            { id: 3053, name: "Ghee Ragi Rotti", price: 90 },
+            
+            
+          ],
+          "Sweet": [
+            { id: 3060, name: "Kesari Bath", price: 60 },
+            { id: 3061, name: "Sweet Pongal (Sat & Sun)", price: 80 },
+          ],
+          "Breakfast Combo": [
+            { id: 3070, name: "Idli, Mini Vada, Upma, Khara Bath, Kesari Bath, Mini Ghee Masala Dosa", price: 200 },
+          ],
+          "Evening": [
+            { id: 3080, name: "Ghee Rava Idli", price: 60 },
+            { id: 3081, name: "Vada", price: 30 },
+            { id: 3082, name: "Mangalore Bajji", price: 60 },
+            { id: 3083, name: "Poori", price: 80 },
+            { id: 3084, name: "Onion Pakoda", price: 55 },
+          ],
+          "Hot Beverages": [
+            { id: 3090, name: "Coffee", price: 35 },
+            { id: 3091, name: "Filter Coffee", price: 35 },
+            { id: 3092, name: "Tea", price: 35 },
+            
+            { id: 3094, name: "Badam Milk", price: 35 },
+            { id: 3095, name: "Bournvita / Boost / Horlicks", price: 35 },
+            
+          ],
+        },
+      },
+
+      /* ===== Kailash Parbat ===== */
+      kailash: {
+        label: "Kailash Parbat",
+        taglineHint: "Mumbai-style Veg Favourites",
+        categories: {
+          "Chaats": [
+            { id: 4101, name: "Pani Puri", price: 90 },
+            { id: 4102, name: "Dahi Puri", price: 155 },
+            { id: 4103, name: "Bhel Puri", price: 155 },
+            { id: 4104, name: "Dahi Wada", price: 155 },
+            { id: 4105, name: "Papdi Chaat", price: 145 },
+            { id: 4106, name: "Samosa Chaat", price: 165 },
+            { id: 4107, name: "Mix Chaat", price: 175 },
+            { id: 4108, name: "Crispy Corn Basket", price: 165 },
+            { id: 4109, name: "Tikki Chaat", price: 179 },
+            { id: 4110, name: "Sev Puri", price: 165 },
+            { id: 4111, name: "KP Chaat Platter", price: 300 },
+          ],
+          "House Special Since 1952": [
+            { id: 4201, name: "Chole Bhatura", price: 285 },
+            { id: 4202, name: "Bhatura Platter", price: 435 },
+            { id: 4203, name: "Ragda Samosa (2 Pcs)", price: 164 },
+            { id: 4204, name: "Ragda Pattice (2 Pcs)", price: 174 },
+            { id: 4205, name: "Masala Pav With Papad (2 Pcs)", price: 235 },
+            { id: 4206, name: "Pav Bhaji", price: 224 },
+            { id: 4207, name: "Cheese Pav Bhaji", price: 254 },
+            { id: 4208, name: "Bombay Wada Pav (2 Pcs)", price: 135 },
+            { id: 4209, name: "Borivali Ki Dabeli (2 Pcs)", price: 165 },
+            { id: 4210, name: "Juhu Chowpaty Tawa Pulav With Raita & Papad", price: 334 },
+            { id: 4211, name: "Juhu Chowpaty Cheese Tawa Pulav With Raita & Papad", price: 364 },
+          ],
+          "Sandwiches": [
+            { id: 4301, name: "Aamchi Mumbai Sandwich", price: 174 },
+            { id: 4302, name: "Veg Sandwich", price: 144 },
+            { id: 4303, name: "Plain Cheese Sandwich", price: 154 },
+            { id: 4304, name: "Veg Cheese Sandwich", price: 174 },
+            { id: 4305, name: "Veg Grill Sandwich", price: 265 },
+            { id: 4306, name: "Veg Cheese Grill Sandwich", price: 295 },
+            { id: 4307, name: "Pattice Cheese Grill Sandwich", price: 305 },
+          ],
+          "Cold Beverages": [
+            { id: 4401, name: "Nimbu Paani (200 Ml)", price: 79 },
+            { id: 4402, name: "Masala Chaas (200 Ml)", price: 100 },
+            { id: 4403, name: "Sweet Lassi (200 Ml)", price: 110 },
+            { id: 4404, name: "Mango Lassi (200 Ml)", price: 120 },
+            { id: 4405, name: "Desi Kala Khatta (200 Ml)", price: 84 },
+            { id: 4406, name: "Cold Coffee (200 Ml)", price: 114 },
+            { id: 4407, name: "Lemon Iced Tea (200 Ml)", price: 74 },
+          ],
+          "Sides": [
+            { id: 4501, name: "Papad (1 Pc)", price: 49 },
+            { id: 4502, name: "Mix Veg Raita", price: 114 },
+            { id: 4503, name: "Plain Curd", price: 84 },
+            { id: 4504, name: "Fresh Green Salad", price: 164 },
+            { id: 4505, name: "Boondi Raita", price: 94 },
+          ],
+          "Desserts": [
+            { id: 4601, name: "Gulab Jamun (2 Pcs)", price: 134 },
+            { id: 4602, name: "Gulab Jamun With Rabdi (2 Pcs)", price: 194 },
+            { id: 4603, name: "Falooda Kulfi", price: 224 },
+            { id: 4604, name: "Malai Rabdi (100 Gms)", price: 174 },
+            { id: 4605, name: "Royal Falooda", price: 264 },
+          ],
+        },
+      },
+
+      /* ===== Amruth Gobi Centre ===== */
+      agc: {
+        label: "Amruth Gobi Centre (Original)",
+        taglineHint: "Indo-Chinese Favourites",
+        categories: {
+          "Combos": [
+            { id: 5101, name: "Fried Rice Mixed Gobi Manchurian", price: 89 },
+            { id: 5102, name: "Noodles Mixed Gobi Manchurian", price: 88 },
+          ],
+          "Starters": [
+            { id: 5201, name: "Gobi Manchurian", price: 89 },
+            { id: 5202, name: "Dry Gobi", price: 89 },
+            { id: 5203, name: "Chilli Gobi Manchurian", price: 110, desc: "Chilli gobi manchurian." },
+          ],
+          "Fried Rice and Noodles": [
+            { id: 5301, name: "Fried Rice", price: 80 },
+            { id: 5302, name: "Noodles", price: 88 },
+          ],
+        },
+      },
+
+      /* ===== Polar Bear ===== */
+      polar: {
+        label: "Polar Bear",
+        taglineHint: "Ice Creams & Sundaes",
+        categories: {
+          
+  "Cookies": [
+    { "id": 6001, "name": "Chill Cookie", "price": 104, "description": "Chill Cookies are your perfect go-to treat for relaxing moments—soft-baked and loaded." }
+  ],
+
+  "Polar Bear Originals": [
+    { "id": 6101, "name": "Fruit Zest Sundae", "price": 209, "description": "Strawberry, Mango & Vanilla ice cream topped with apple & pineapple pieces and dry fruits." },
+    { "id": 6102, "name": "Dry Fruit Special Sundae", "price": 209, "description": "Creamy vanilla ice cream loaded with figs, raisins, almonds, dates and more dry fruits." },
+    { "id": 6103, "name": "Chocozilla Sundae", "price": 221, "description": "Chocolate ice cream with gooey chocolate cake and a chocolate bar, topped with chocolate sauce." },
+    { "id": 6104, "name": "Red Velvet Choco Sin Sundae", "price": 221, "description": "Vanilla ice cream and red velvet cake topped with hot chocolate fudge." },
+    { "id": 6105, "name": "Banoffee Sundae", "price": 221, "description": "Ripe bananas and roasted almonds with butterscotch & vanilla ice cream and hot fudge." }
+  ],
+
+  "Craft Hot Chocolate": [
+    { "id": 6201, "name": "Marshmallow Hot Chocolate Flask - 400ml", "price": 450, "description": "Classic hot chocolate topped with fluffy marshmallows. Serves 2." },
+    { "id": 6202, "name": "Classic Hot Chocolate Flask - 400ml", "price": 367, "description": "Rich, velvety blend of cocoa and milk that warms you through." }
+  ],
+
+  "Biscoff Cookie Sundaes": [
+    { "id": 6301, "name": "Biscoff Coffee Shot", "price": 209, "description": "Coffee ice cream with mocha sauce and a touch of Biscoff." },
+    { "id": 6302, "name": "Biscoff Banoffee Sundae", "price": 230, "description": "Creamy butterscotch and vanilla layered with fresh banana and Biscoff." }
+  ],
+
+  "Naturally Good Sundaes": [
+    { "id": 6401, "name": "Naturally Jaggery Almond Fusion Sundae", "price": 251, "description": "Fresh jaggery ice cream with roasted almonds, banana cubes and pure jaggery." },
+    { "id": 6402, "name": "Naturally Chikku N Dry Fruit Sundae", "price": 251, "description": "Real chikoo ice cream with roasted cashews, almonds, banana cubes, dates and dry fruits." },
+    { "id": 6403, "name": "Tropical Dry Fruit Medley Sundae", "price": 251, "description": "Natural jackfruit ice cream with roasted cashews & almonds, banana cubes, dates and dry fruits." }
+  ],
+
+  "Asian Fusion Sundaes": [
+    { "id": 6501, "name": "Nutty Taro Grande Sundae", "price": 257, "description": "Purple Punch and vanilla ice creams layered with vanilla cake, topped with whipped cream and nuts." },
+    { "id": 6502, "name": "Matcha Vanilla Grande Sundae", "price": 257, "description": "Vanilla ice cream with soft vanilla cake, whipped cream and matcha drizzle." }
+  ],
+
+  "Chocolate Sundaes": [
+    { "id": 6601, "name": "Brownie Fudge Sundae", "price": 198, "description": "Chunky walnut brownie and vanilla ice cream topped with hot chocolate fudge and nuts." },
+    { "id": 6602, "name": "Choco Brownie Fudge Sundae", "price": 209, "description": "Chocolate walnut brownie and chocolate ice cream topped with smooth fudge and whipped cream." },
+    { "id": 6603, "name": "Cookie Monster Sundae", "price": 209, "description": "Crushed waffle cones, vanilla ice cream and chocolate sponge cake with chocolate sauce." },
+    { "id": 6604, "name": "Hot Chocolate Fudge (Regular) Sundae", "price": 163, "description": "Vanilla ice cream with gooey chocolate sauce and roasted cashews." },
+    { "id": 6605, "name": "Hot Chocolate Fudge (Large) Sundae", "price": 209, "description": "Vanilla ice cream with extra gooey chocolate sauce and roasted cashews." },
+    { "id": 6606, "name": "Rocky Road Sundae", "price": 198, "description": "Coffee Brazilia, Chocolate & Vanilla ice creams topped with roasted almonds and chocochips." }
+  ],
+
+  "Fundaes": [
+    { "id": 6701, "name": "Blueberry Bliss Sundae", "price": 177, "description": "Vanilla ice cream and vanilla cake topped with signature cream cheese blend and blueberry." },
+    { "id": 6702, "name": "Butter Scotch Fudge Fudge", "price": 194, "description": "Butterscotch ice cream topped with cashews, caramel and chocolate sauce." },
+    { "id": 6703, "name": "Blackcurrant Punch Sundae", "price": 184, "description": "Blackcurrant ice cream mixed with assorted scoops and vanilla cake." }
+  ],
+
+  "Death by Chocolate Sundaes": [
+    { "id": 6801, "name": "My DBC Sundae", "price": 198, "description": "A 'not to be shared' smaller version of the classic DBC." },
+    { "id": 6802, "name": "Classic Death By Chocolate", "price": 242, "description": "Vanilla ice cream with rich chocolate cake, fudge and chocolate overload." }
+  ],
+
+  "Fruity Delight": [
+    { "id": 6901, "name": "Gudbud Sundae", "price": 184, "description": "Vanilla, Strawberry & Pineapple ice creams topped with fruit pieces and dry fruits." },
+    { "id": 6902, "name": "Lychee Sundae", "price": 221, "description": "Lychee ice cream with fresh lychees topped with nuts and dry fruits." },
+    { "id": 6903, "name": "Classic Banana Split Sundae", "price": 198, "description": "Banana with Vanilla, Strawberry & Chocolate ice creams, topped with sauces and nuts." }
+  ],
+
+  "Coffee Sundaes": [
+    { "id": 7001, "name": "Mocha Twist Sundae", "price": 177, "description": "Coffee and chocolate ice cream with rich chocolate cake and cream cheese blend." }
+  ],
+
+  "Family Sundaes": [
+    { "id": 7101, "name": "Seven Wonders Sundae", "price": 335, "description": "Seven assorted ice cream flavours with a single topping of your choice." }
+  ],
+
+  "Faloodas": [
+    { "id": 7201, "name": "Dry Fruit Falooda", "price": 251, "description": "Falooda made with real chikoo ice cream and loaded with dry fruits." },
+    { "id": 7202, "name": "Mango Falooda", "price": 251, "description": "Falooda with Alphonso mango ice cream and mango goodness." },
+    { "id": 7203, "name": "Vanilla Classic Falooda", "price": 198, "description": "Vanilla ice cream with rose milk, vermicelli and classic falooda fixings." },
+    { "id": 7204, "name": "Malai Kulfi Falooda", "price": 251, "description": "Falooda paired with malai kulfi for a rich, flavorful dessert." }
+  ],
+
+  "Ice Cream Cakes": [
+    { "id": 7301, "name": "Red N White Ice Cream Cake", "price": 509.63, "description": "Layers of red velvet ice cream, red velvet cake, blueberries and white chocolate." },
+    { "id": 7302, "name": "Tiramisu Grande Ice Cream Cake", "price": 509.63, "description": "Coffee-flavoured ice cream cake with Coffee Brazilia ice cream and chocolate elements." }
+  ],
+
+  "Family Tubs - Ice Cream Tubs": [
+    { "id": 7401, "name": "Butterscotch Ice Cream Tub (500 ml)", "price": 299.61, "description": "Bestselling butterscotch ice cream topped with caramel crackle." },
+    { "id": 7402, "name": "Vanilla Ice Cream Tub (500 ml)", "price": 214, "description": "Classic vanilla ice cream." },
+    { "id": 7403, "name": "Alphonso Mango Ice Cream Tub (500 ml)", "price": 299.61, "description": "Bestselling Alphonso mango ice cream." },
+    { "id": 7404, "name": "Belgian Chocolate Ice Cream Tub (500 ml)", "price": 342.98, "description": "Belgian chocolate ice cream topped with loads of chocolate." },
+    { "id": 7405, "name": "Choco Almond Fudge Ice Cream Tub (500 ml)", "price": 318.8, "description": "Choco almond ice cream topped with extra chocolate and almonds." },
+    { "id": 7406, "name": "Jackfruit Ice Cream Tub (500 ml)", "price": 342.98, "description": "Ice cream with fresh jackfruit pieces." },
+    { "id": 7407, "name": "Kulfi Ice Cream Tub (500 ml)", "price": 317.8, "description": "Indian classic kulfi ice cream." },
+    { "id": 7408, "name": "No Added Sugar - Vanilla Ice Cream Tub (500 ml)", "price": 342.98, "description": "Vanilla ice cream with zero added sugar." }
+  ],
+
+  "Family Tubs - Sundae Tubs": [
+    { "id": 7501, "name": "Gudbud Sundae Tub (480 ml)", "price": 342.98, "description": "Vanilla & Strawberry ice cream with pineapple pulp and a topping of dry fruits." },
+    { "id": 7502, "name": "Brownie Fudge Sundae Tub (480 ml)", "price": 342.98, "description": "Gooey chocolate walnut brownie and vanilla ice cream with chocolate topping." },
+    { "id": 7503, "name": "Excess Chocolate Sundae Tub (480 ml)", "price": 342.98, "description": "Soft chocolate sponge, chocolate ice cream and swirls of chocolate fudge." },
+    { "id": 7504, "name": "Red Velvet Sundae Tub (480 ml)", "price": 342.98, "description": "Red velvet ice cream, soft red velvet cake and exotic cherry compote." },
+    { "id": 7505, "name": "Tiramisu Grande Sundae Tub (480 ml)", "price": 342.98, "description": "Coffee ice cream and dark chocolate cake topped with chocolate and mocha sauce." }
+  ],
+
+  "Ice Cream Shakes - Set 1": [
+    { "id": 7601, "name": "Caramel Vanilla Ice Cream Shake", "price": 209, "description": "Vanilla ice cream with caramel topping." },
+    { "id": 7602, "name": "Cookie Ice Cream Shake", "price": 209, "description": "Blend of Oreo cookies and vanilla ice cream." },
+    { "id": 7603, "name": "Cold Coffee Ice Cream Shake", "price": 209, "description": "Classic vanilla ice cream and coffee blend." },
+    { "id": 7604, "name": "Wild Strawberry Ice Cream Shake", "price": 209, "description": "Strawberry ice cream with strawberry syrup." },
+    { "id": 7605, "name": "Chocolate Ice Cream Shake", "price": 209, "description": "Rich chocolate ice cream shake topped with chocochips." }
+  ],
+
+  "Ice Cream Shakes - Set 2": [
+    { "id": 7701, "name": "Banana-Mango Ice Cream Shake", "price": 209, "description": "Fresh bananas, mango ice cream and mango pulp." },
+    { "id": 7702, "name": "Red Velvet Cookie Ice Cream Shake", "price": 209, "description": "Vanilla ice cream blended with red velvet cake and cookies." },
+    { "id": 7703, "name": "Death by Chocolate Ice Cream Shake", "price": 209, "description": "The classic DBC experience in shake form." }
+  ],
+
+  "Dairy-Free Sorbets": [
+    { "id": 7801, "name": "Kala Jamun Sorbet", "price": 93, "description": "Melt-in-the-mouth kala jamun sorbet cubes." },
+    { "id": 7802, "name": "Alphonso Mango Sorbet", "price": 83, "description": "Melt-in-the-mouth Alphonso mango sorbet cubes." },
+    { "id": 7803, "name": "Guava Chilli Sorbet", "price": 93, "description": "Guava sorbet cubes with a nostalgic chilli sprinkle." },
+    { "id": 7804, "name": "Alphonso Mango Chilli Sorbet", "price": 93, "description": "Mango sorbet cubes with chilli and salt." }
+  ],
+
+  "Ice Cream Scoops - Special Flavours": [
+    { "id": 7901, "name": "Toffee", "price": 104, "description": "" },
+    { "id": 7902, "name": "Strawberry Ice Cream", "price": 73, "description": "The all-time fruity classic (single scoop)." },
+    { "id": 7903, "name": "Vanilla Ice Cream", "price": 73, "description": "Cold and creamy classic (single scoop)." },
+    { "id": 7904, "name": "Rich Chocolate Ice Cream", "price": 94, "description": "Rich and thick chocolate bliss (single scoop)." },
+    { "id": 7905, "name": "Pista Ice Cream", "price": 94, "description": "Pista-flavoured ice cream with a hint of dry fruits." },
+    { "id": 7906, "name": "Fresh Pineapple Ice Cream", "price": 94, "description": "Intensely sweet tropical classic (single scoop)." },
+    { "id": 7907, "name": "Butterscotch Ice Cream", "price": 94, "description": "Nutty and buttery praline classic (single scoop)." },
+    { "id": 7908, "name": "Alphonso Mango Ice Cream", "price": 94, "description": "Made from hand-picked Alphonso mangoes (single scoop)." }
+  ],
+
+  "Ice Cream Scoops - Exotic Flavours": [
+    { "id": 8001, "name": "Cookie N Cream", "price": 104, "description": "" },
+    { "id": 8002, "name": "Red Velvet Ice Cream", "price": 104, "description": "Indulgent treat made with red velvet cake and cherry compote (single scoop)." },
+    { "id": 8003, "name": "Purple Punch Ice Cream", "price": 104, "description": "Blackcurrant ice cream with raisins (single scoop)." },
+    { "id": 8004, "name": "Lychica Ice Cream", "price": 104, "description": "Pulpy lychee ice cream (single scoop)." },
+    { "id": 8005, "name": "Fruit Punch Ice Cream", "price": 104, "description": "Medley of banana-flavoured ice cream with dry fruits (single scoop)." },
+    { "id": 8006, "name": "Coffee Brazilia Ice Cream", "price": 104, "description": "Coffee and ice cream blend (single scoop)." },
+    { "id": 8007, "name": "Kulfi Ice Cream", "price": 104, "description": "Indian classic with saffron and pista (single scoop)." },
+    { "id": 8008, "name": "Belgian Chocolate Ice Cream", "price": 104, "description": "Made for chocolate lovers (single scoop)." },
+    { "id": 8009, "name": "Paan Ice Cream", "price": 104, "description": "Indian classic with herbal paan notes (single scoop)." },
+    { "id": 8010, "name": "Gajar Halwa", "price": 94, "description": "" }
+  ],
+
+  "Ice Cream Scoops - Flavours (No Added Sugar)": [
+    { "id": 8101, "name": "No Added Sugar - Vanilla Ice Cream", "price": 94, "description": "Guilt-free vanilla ice cream with zero added sugar (single scoop)." }
+  ],
+
+  "Ice Cream Scoops - Natural Flavours": [
+    { "id": 8201, "name": "Jaggery Fruit & Nut", "price": 94, "description": "Jaggery-based ice cream with fruits and nuts (single scoop)." },
+    { "id": 8202, "name": "Jackfruit Ice Cream", "price": 104, "description": "Ice cream with fresh jackfruit pieces (single scoop)." },
+    { "id": 8203, "name": "Real Chikoo Ice Cream", "price": 104, "description": "Ice cream with fresh chikoo pieces (single scoop)." }
+  ],
+
+
+
+          "Extras": [ { id: 6210, name: "Topping: Hot Chocolate Sauce", price: 50 } ],
+        },
+      },
+
+      
+      /* ===== King's Coffee ===== */
+      kingsCoffee: {
+        label: "King's Coffee",
+        taglineHint: "Short Eats & Coffee Delights",
+        categories: {
+          "Short Eats": [
+            { id: 8001, name: "Masala Cookies (Box)", price: 85 },
+            { id: 8002, name: "Onion Kodubale (1 Pack)", price: 105 }
+          ],
+          "Fries": [
+            { id: 8003, name: "Cheese Fries", price: 140 },
+            { id: 8004, name: "French Fries", price: 120 },
+            { id: 8005, name: "Masala Fries", price: 130 },
+            { id: 8006, name: "Peri Peri Fries", price: 145, desc: "French fries mixed in spicy peri peri powder." },
+            { id: 8007, name: "Schezwan Fries", price: 130 },
+            { id: 8008, name: "Tandoori Fries", price: 130 }
+          ],
+          "Sandwich": [
+            { id: 8009, name: "Aloo Tikki Sandwich", price: 130, desc: "Bread [2 slices], butter, green chutney, masala aloo, tandoori, mayonnaise, grilled." },
+            { id: 8010, name: "Chilli Cheese Garlic Toast", price: 215 },
+            { id: 8011, name: "Chocolate Sandwich", price: 120, desc: "Bread [2 slices], butter, cheese slices, dark chocolate, chocolate sauce, grilled." },
+            { id: 8012, name: "King's Special Sandwich", price: 175, desc: "Bread [2 slices], green chutney, masala potato mixed vegetables, cheese, mayonnaise, toasted." },
+            { id: 8013, name: "Mint Mayo Sandwich", price: 155 },
+            { id: 8014, name: "Paneer Tikka Sandwich", price: 200, desc: "Bread [2 slices], butter, paneer tikka, mayonnaise, liquid cheese, grilled." },
+            { id: 8015, name: "Pizza Sandwich", price: 180, desc: "Bread [2 slices], butter, onion, sweet corn, jalapeno, pickles, chilli flakes, oregano." },
+            { id: 8016, name: "Sweet Corn Dahi Sandwich", price: 155 },
+            { id: 8017, name: "Sweet Corn Sandwich", price: 125, desc: "Bread [2 slices], butter, American corn, capsicum, onion, tomato, mayonnaise, chilli garlic sauce." },
+            { id: 8018, name: "Veg Grill Sandwich", price: 110 }
+          ],
+          "Snacks": [
+            { id: 8019, name: "Balekai Bajji", price: 80 },
+            { id: 8020, name: "Bread Chaat Pakoda", price: 120 },
+            { id: 8021, name: "Jalapeno Poppers", price: 105 },
+            { id: 8022, name: "Onion Pakoda", price: 125, desc: "15 Pcs of crispy onion pakodas" },
+            { id: 8023, name: "Sabudana Vada", price: 105, desc: "2 pc of Sabudana Vada" },
+            { id: 8024, name: "Sweet Corn Butter Garlic Fry", price: 145 },
+            { id: 8025, name: "Veg Spring Roll (2 Pcs)", price: 90 }
+          ],
+          "Burger": [
+            { id: 8026, name: "Aloo Tikki Burger", price: 155 },
+            { id: 8027, name: "King's Special Burger", price: 225, desc: "Double patty, lettuce, cheese, mayonnaise, tomatoes, onion and toasted burger bun." },
+            { id: 8028, name: "Masala Tikki Burger", price: 165 },
+            { id: 8029, name: "Paneer Burger", price: 230, desc: "Fried paneer patty, lettuce, cheese patty, tomato, onion and toasted burger buns." },
+            { id: 8030, name: "Veggie Burger", price: 155, desc: "Veg patty, cheese patty, lettuce, tomato and toasted burger buns." }
+          ],
+          "Buns": [
+            { id: 8031, name: "Aloo Tikki Cheese Bun", price: 90 },
+            { id: 8032, name: "Butter Sweet Bun", price: 55 },
+            { id: 8033, name: "Cheese Bun", price: 60 },
+            { id: 8034, name: "Peanuts Spicy Bun", price: 80 },
+            { id: 8035, name: "Spicy Paneer Bun", price: 105 }
+          ],
+          "Pav": [
+            { id: 8036, name: "BBQ Vada Pav", price: 90 },
+            { id: 8037, name: "Cheese Vada Pav", price: 90 },
+            { id: 8038, name: "King's Special Pav", price: 140 },
+            { id: 8039, name: "Peri Peri Vada Pav", price: 85 },
+            { id: 8040, name: "Schezwan Vada Pav", price: 90 },
+            { id: 8041, name: "Tandoori Vada Pav", price: 90 },
+            { id: 8042, name: "Vada Pav", price: 70 }
+          ],
+          "Must Try": [
+            { id: 8043, name: "Bread Cheese Pakoda", price: 170 },
+            { id: 8044, name: "Cheese Garlic Bread", price: 200 },
+            { id: 8045, name: "Garlic Cheese Bun", price: 155 },
+            { id: 8046, name: "Loaded Masala Cheese Pav", price: 155 },
+            { id: 8047, name: "Paneer Chilli Cheese Toast", price: 190 },
+            { id: 8048, name: "Paneer Pizza Pops", price: 190 }
+          ],
+          "Momos": [
+            { id: 8049, name: "Cheese Momos", price: 150 },
+            { id: 8050, name: "Crispy Cheese Momos", price: 165 },
+            { id: 8051, name: "Crispy Paneer Momos", price: 170 },
+            { id: 8052, name: "Crispy Veg Momos", price: 155 },
+            { id: 8053, name: "Paneer Momos", price: 155 },
+            { id: 8054, name: "Veg Momos", price: 145 }
+          ],
+          "Nuggets": [
+            { id: 8055, name: "Paneer Balls", price: 105 }
+          ],
+          "Pasta": [
+            { id: 8056, name: "Arrabbiata Sauce Pasta", price: 195 },
+            { id: 8057, name: "Butter Paneer Sauce", price: 175 },
+            { id: 8058, name: "Pink Sauce Pasta", price: 155 },
+            { id: 8059, name: "Sweet Corn Sauce Pasta", price: 170 },
+            { id: 8060, name: "White Sauce Pasta", price: 195 }
+          ],
+          "Fruit Crush (Cold)": [
+            { id: 8061, name: "Black Currant Crush", price: 130 },
+            { id: 8062, name: "Chico Crush", price: 130 },
+            { id: 8063, name: "Coconut Crush", price: 145 },
+            { id: 8064, name: "Green Apple Crush", price: 130 },
+            { id: 8065, name: "Guava Crush", price: 130 },
+            { id: 8066, name: "Kiwi Crush", price: 130 },
+            { id: 8067, name: "Mango Crush", price: 130 },
+            { id: 8068, name: "Strawberry Crush", price: 130 }
+          ],
+          "Mocktails (Cold)": [
+            { id: 8069, name: "Blue Lemonade", price: 105 },
+            { id: 8070, name: "Ginger Lemon", price: 90 },
+            { id: 8071, name: "Iced Americano", price: 105 },
+            { id: 8072, name: "Kaala Katta", price: 105 },
+            { id: 8073, name: "Lemon Ice Tea", price: 105 },
+            { id: 8074, name: "Peach Ice Tea", price: 105 }
+          ],
+          "Pav Bhaji": [
+            { id: 8075, name: "Butter Pav Bhaji", price: 160 },
+            { id: 8076, name: "Cheese Pav Bhaji", price: 165 },
+            { id: 8077, name: "Paneer Pav Bhaji", price: 175 }
+          ],
+          "Royal Crush (Cold)": [
+            { id: 8078, name: "Chocolate Milk Shake", price: 160 },
+            { id: 8079, name: "Cold Badam Milk", price: 120 },
+            { id: 8080, name: "Kesar Badam", price: 155 },
+            { id: 8081, name: "Kit Kat Milkshake", price: 175 },
+            { id: 8082, name: "Peach & Apricot", price: 130 },
+            { id: 8083, name: "Pista", price: 145 },
+            { id: 8084, name: "Rasmalai", price: 145 },
+            { id: 8085, name: "Rose Milk", price: 120 }
+          ],
+          "Others": [
+            { id: 8086, name: "Coffee Powder (250 Gms)", price: 225 },
+            { id: 8087, name: "Coffee Powder (500 Gms)", price: 450 },
+            { id: 8088, name: "Fresh Filter Coffee Decoction", price: 180, desc: "Authentic filter coffee (200ml)" },
+            { id: 8089, name: "Jaggery (1 Kg)", price: 170 }
+          ],
+          "Wrap & Pita": [
+            { id: 8090, name: "Falafel Tortilla Wrap", price: 190 },
+            { id: 8091, name: "Paneer Tortilla Wrap", price: 210 }
+          ]
+        }
+      },
+/* ===== Bangarpet Chats & Soda ===== */
+bangarpet: {
+  label: "Bangarpet Chats ",
+ 
+  categories: {
+    "Bangarpet Specials": [
+      { id: 9001, name: "Bangarpet Pani Puri", price: 55 },
+      { id: 9002, name: "Aloo Puri", price: 65 },
+      { id: 9003, name: "Unde Masala", price: 60 },
+      { id: 9004, name: "Dahi Puri", price: 65 }
+    ],
+    "Quick Chats": [
+      { id: 9010, name: "Raja Special", price: 60 },
+      { id: 9011, name: "Bhel Puri", price: 70 },
+      { id: 9012, name: "Masala Puri", price: 60 },
+      { id: 9013, name: "Sev Puri", price: 75 }
+    
+    ]
+  }
+},
+
+      /* ===== Indian Curry House (NEW) ===== */
+      indianCurryHouse: {
+        label: "Indian Curry House",
+        taglineHint: "Dine-in & Takeaway",
+        categories: {
+          /* Starters & Munchies */
+          "Chinese Starters": [
+            { id: 7001, name: "Paneer Chilli", price: 279, desc: "Crisp fried paneer tossed in Manchurian sauce." },
+            { id: 7002, name: "Crispy Corn & Pepper", price: 249, desc: "Spiced snack of fried corn tossed with peppers." },
+            { id: 7003, name: "Mushroom Pepper Dry", price: 269, desc: "Button mushrooms and capsicum with black pepper." },
+            { id: 7004, name: "Babycorn Manchurian", price: 245, desc: "Crisp fried babycorn in Manchurian sauce." },
+            { id: 7005, name: "Spinach Chilli Paneer", price: 285, desc: "Palak-flavoured paneer Manchurian." },
+            { id: 7006, name: "Veg Ball Manchurian", price: 239, desc: "Veggie balls in spicy tangy sauce." },
+            { id: 7007, name: "Babycorn Chilli", price: 259, desc: "Crisp babycorn tossed Indo-Chinese style." },
+            { id: 7008, name: "Chinese Bhel", price: 185, desc: "Crispy noodles tossed with sweet & sour chutney." },
+            { id: 7009, name: "Crispy Fried Vegetable", price: 249, desc: "Casual crunchy snack." },
+            { id: 7010, name: "Dim Sim (Momo)", price: 209, desc: "Steamed dumplings." },
+            { id: 7011, name: "Gobi Manchurian", price: 245, desc: "Crisp cauliflower in Manchurian sauce." },
+            { id: 7012, name: "Mushroom Chilli", price: 279, desc: "Crispy mushrooms in sweet, spicy, tangy sauce." },
+            { id: 7013, name: "Mushroom Manchurian", price: 269 },
+            { id: 7014, name: "Paneer Manchurian", price: 269 },
+            { id: 7015, name: "Veg Spring Roll", price: 249, desc: "Cabbage, carrots & onions with seasoning." },
+          ],
+          "North Indian Starters": [
+            { id: 7020, name: "Tilli Baby Corn", price: 299 },
+            { id: 7021, name: "Bhatti Ka Paneer (6 pcs)", price: 345 },
+            { id: 7022, name: "Dahi Ke Kebab", price: 315, desc: "Chef’s signature hung-yogurt patties." },
+            { id: 7023, name: "Makai Seekh Kebab", price: 319, desc: "Veg seekh with corn & fresh herbs." },
+            { id: 7024, name: "Bhutta Cigar", price: 339, desc: "Corn, potato, paneer with black pepper." },
+            { id: 7025, name: "Cheese Kurkuri", price: 325, desc: "Mace-spiced cheese wrapped & fried." },
+            { id: 7026, name: "Chitti Aayee Hai", price: 329, desc: "Spicy paneer filling in roomali lifafa." },
+            { id: 7027, name: "Chonk Ki Tikki", price: 299, desc: "Aloo, mutter, kishmish & cheese tikki." },
+            { id: 7028, name: "Chota Aloo Mota Masala", price: 299, desc: "Baby potatoes in curd gravy." },
+            { id: 7029, name: "Do Phool Do Swad", price: 329, desc: "Cauliflower & broccoli, achari & malai." },
+            { id: 7030, name: "Jalpaan Platter", price: 589, desc: "Assorted starter platter." },
+            { id: 7031, name: "Lazeez Kumb", price: 329, desc: "Stuffed mushrooms, tandoor finished." },
+            { id: 7032, name: "Paneer Karara Dhaniya", price: 329, desc: "Paneer stuffed with spinach, coriander crust." },
+            { id: 7033, name: "Paneer Teen Swad", price: 345, desc: "Paneer in achari, malai & classic marinades." },
+            { id: 7034, name: "Roti Pe Paneer Ke Moti", price: 329, desc: "Cottage cheese & peppers on roti." },
+            { id: 7035, name: "Sikandari Paneer", price: 345, desc: "Paneer stuffed with kaju, cheese & chilli." },
+            { id: 7036, name: "Tandoori Satay", price: 345, desc: "Thai-style marinated paneer, tandoor cooked." },
+          ],
+          "Italian Starters": [
+            { id: 7040, name: "Spinach Corn Cheese Balls (10 pcs)", price: 295 },
+            { id: 7041, name: "Cheesy Vegetable Disc", price: 299 },
+            { id: 7042, name: "Broccoli Cheese Ball", price: 269 },
+            { id: 7043, name: "Mexican Patties", price: 305 },
+            { id: 7044, name: "Baked Cheese Fries", price: 275 },
+            { id: 7045, name: "Big Nachos", price: 345 },
+            { id: 7046, name: "Bruschetta", price: 205 },
+            { id: 7047, name: "Dip & Fries", price: 225 },
+            { id: 7048, name: "French Fries", price: 185 },
+            { id: 7049, name: "Garlic Bread (5 pcs)", price: 165 },
+            { id: 7050, name: "Garlic Bread With Cheese & Chilly (5 pcs)", price: 195 },
+            { id: 7051, name: "Nachos", price: 265 },
+            { id: 7052, name: "Papdi Pizza", price: 229 },
+            { id: 7053, name: "Potato Wedges", price: 185 },
+            { id: 7054, name: "Special Tacos", price: 315 },
+            { id: 7055, name: "Vegetable Bruschetta", price: 215 },
+          ],
+
+          /* Simply Desi (Curries) – serves 3 */
+          "Simply Desi (curries) (serves 3)": [
+            { id: 7060, name: "Kadai Paneer", price: 315 },
+            { id: 7061, name: "Paneer Tikka Lababdar", price: 345 },
+            { id: 7062, name: "Paneer Butter Masala", price: 325 },
+            { id: 7063, name: "Vegetable Kolhapuri", price: 299 },
+            { id: 7064, name: "Palak Paneer", price: 315 },
+            { id: 7065, name: "Kadai Vegetable", price: 299 },
+            { id: 7066, name: "Kaju Cheese Masala", price: 345 },
+            { id: 7067, name: "Bhendi Do Pyaza", price: 315 },
+            { id: 7068, name: "Chola Bhatura", price: 299 },
+            { id: 7069, name: "Sarson Da Saag", price: 319 },
+            { id: 7070, name: "Dhingri Mutter Hara Pyaz", price: 335 },
+            { id: 7071, name: "Sev Tamatar Ki Subji", price: 269 },
+            { id: 7072, name: "Aloo Gobi", price: 289 },
+            { id: 7073, name: "Aloo Matar Ki Subji", price: 299 },
+            { id: 7074, name: "Aloo Methi", price: 265 },
+            { id: 7075, name: "Amritsari Chole & Kulche (2 Pcs)", price: 459 },
+            { id: 7076, name: "Amritsari Paneer Bhurji", price: 339 },
+            { id: 7077, name: "Banarasi Aloo", price: 325 },
+            { id: 7078, name: "Bhutta Palak Methi", price: 325 },
+            { id: 7079, name: "Corn Capsicum Masala", price: 299 },
+            { id: 7080, name: "Dahi Wali Bhendi", price: 265 },
+            { id: 7081, name: "Dum Ka Kumb", price: 329 },
+            { id: 7082, name: "Jantar Mantar", price: 315 },
+            { id: 7083, name: "Jeera Aloo", price: 289 },
+            { id: 7084, name: "Lipta Mushroom Masala", price: 335 },
+            { id: 7085, name: "Mutter Methi Malai", price: 319 },
+            { id: 7086, name: "Nargisi Kofta", price: 329 },
+            { id: 7087, name: "Paneer Angara", price: 339 },
+            { id: 7088, name: "Paneer Khurcharan", price: 345 },
+            { id: 7089, name: "Paneer Mussalam", price: 325 },
+            { id: 7090, name: "Plain Palak Subji", price: 249 },
+            { id: 7091, name: "Sarson Da Saag & Makki Di Roti (2 Pcs)", price: 439 },
+            { id: 7092, name: "Subji Panchmel", price: 329 },
+            { id: 7093, name: "Subji Tilli Milli Keema", price: 319 },
+            { id: 7094, name: "Veg Hyderabadi", price: 299 },
+          ],
+
+          /* Mutthi Bhar Chawal (Rice) */
+          "Mutthi Bhar Chawal (rice)": [
+            { id: 7100, name: "Veg Biryani", price: 299 },
+            { id: 7101, name: "Matka Biryani", price: 339 },
+            { id: 7102, name: "Dal Palak Khichdi", price: 315 },
+            { id: 7103, name: "Veg Pulao", price: 299 },
+            { id: 7104, name: "Jeera Rice", price: 285 },
+            { id: 7105, name: "Dum Aloo Makai Biryani", price: 369 },
+            { id: 7106, name: "Curd Rice", price: 155 },
+            { id: 7107, name: "Mexican Rice", price: 375 },
+            { id: 7108, name: "Dessert Biryani", price: 345 },
+            { id: 7109, name: "Dum Ki Teheri", price: 339 },
+            { id: 7110, name: "Methi Chaman Biryani", price: 339 },
+            { id: 7111, name: "Potli Biryani", price: 339 },
+            { id: 7112, name: "Safedh Chawal", price: 165 },
+            { id: 7113, name: "Vilayati Subzi Biryani", price: 339 },
+          ],
+
+          /* Chinese Rice & Noodles */
+          "Chinese Rice & Noodles": [
+            { id: 7120, name: "Vegetable Fried Rice", price: 265 },
+            { id: 7121, name: "Schezwan Noodles", price: 295 },
+            { id: 7122, name: "American Chop Suey", price: 305 },
+            { id: 7123, name: "Burnt Garlic Fried Rice", price: 275 },
+            { id: 7124, name: "Chinese Chop Suey", price: 305 },
+            { id: 7125, name: "Schezwan Fried Rice", price: 275 },
+            { id: 7126, name: "Singapore Noodles", price: 295 },
+            { id: 7127, name: "Veg Hakka Noodles", price: 275 },
+          ],
+
+          /* Cheesecake & More */
+          "Cheesecake & More": [
+            { id: 7130, name: "Triple Chocolate Cheesecake", price: 259 },
+            { id: 7131, name: "Blueberry Cheesecake", price: 179 },
+            { id: 7132, name: "Chocolate Cheesecake", price: 179 },
+            { id: 7133, name: "Classic Coffee Cheesecake", price: 179 },
+            { id: 7134, name: "Lotus Biscoff Cheesecake", price: 339 },
+            { id: 7135, name: "Nutella Cheesecake", price: 229 },
+            { id: 7136, name: "Walnut Brownie", price: 179 },
+            { id: 7137, name: "Italian Tiramisu", price: 249 },
+            { id: 7138, name: "Nariyal Paani Mousse", price: 179 },
+          ],
+
+          /* Special Combos */
+          "Special Combos": [
+            { id: 7140, name: "Special Meal Box", price: 262, desc: "Starter+Salad+2 Baby Roti+1 Baby Kulcha+Paneer Gravy+Dal Fry+Veg Biryani+Dessert" },
+            { id: 7141, name: "2x Special Meal Box", price: 524 },
+            { id: 7142, name: "3x Special Meal Box", price: 786 },
+            { id: 7143, name: "4x Special Meal Box", price: 1048 },
+            { id: 7144, name: "5x Special Meal Box", price: 1310 },
+          ],
+
+          /* Mocktail & Milkshake */
+          "Mocktail & Milkshake": [
+            { id: 7150, name: "Strawberry Milkshake", price: 185 },
+            { id: 7151, name: "All Time Any Time", price: 195, desc: "Apple & Kiwi flavoured drink with cinnamon." },
+            { id: 7152, name: "Butterscotch Milkshake", price: 185 },
+            { id: 7153, name: "Chocolate Milkshake", price: 185 },
+            { id: 7154, name: "Delightful Kiwi", price: 195, desc: "Kiwi, orange, lemon, grenadine, aerated." },
+            { id: 7155, name: "Late Night Flight", price: 195, desc: "Pineapple, strawberry, almond, hazelnut & cream." },
+            { id: 7156, name: "Mango Milkshake", price: 185 },
+            { id: 7157, name: "Mocktail Of The Day", price: 195 },
+            { id: 7158, name: "Monostar", price: 195, desc: "Black currant, lemon, mint, aerated top." },
+            { id: 7159, name: "Party Tonight", price: 195, desc: "Litchi, grenadine, triple sec, orange." },
+            { id: 7160, name: "Pink Hot Lips", price: 195, desc: "Cranberry & strawberry with a touch of triple sec." },
+            { id: 7161, name: "Pista Milkshake", price: 185 },
+            { id: 7162, name: "Shirley Temple", price: 195, desc: "Lime, mint & crushed ice refresher." },
+            { id: 7163, name: "Spicy Guava", price: 195, desc: "Guava & tabasco, sweet & spicy." },
+            { id: 7164, name: "The Resolution", price: 195, desc: "Orange, pineapple, peach & apricot, fizzy." },
+            { id: 7165, name: "Vanilla Milkshake", price: 185 },
+            { id: 7166, name: "Wonderful Day", price: 195, desc: "Mixed fruit juice & strawberry, blended with cream." },
+          ],
+
+          /* Chaat & Chat */
+          "Chaat & Chat": [
+            { id: 7170, name: "Pani Puri (8 pcs)", price: 119, desc: "All time favourite fuchka." },
+            { id: 7171, name: "Karara Palak Chaat", price: 219, desc: "Crispy fried spinach, chutneys & sweet curd." },
+            { id: 7172, name: "Sev Papdi Chaat", price: 185 },
+            { id: 7173, name: "Dahi Papdi Chaat", price: 205 },
+          ],
+
+          /* Quenchers */
+          "Quenchers": [
+            { id: 7180, name: "Bottle Water (1L)", price: 30, desc: "Packaged drinking water." },
+            { id: 7181, name: "Cold Coffee", price: 159 },
+            { id: 7182, name: "Fresh Lime Juice", price: 89 },
+            { id: 7183, name: "Iced Tea", price: 159 },
+            { id: 7184, name: "Red Bull", price: 169 },
+          ],
+
+          /* Fresh 'n' Thanda */
+          "Fresh 'n' Thanda": [
+            { id: 7190, name: "Badami Thandai", price: 159 },
+            { id: 7191, name: "Chandan Sherbat", price: 149 },
+            { id: 7192, name: "Jaljeera", price: 100 },
+            { id: 7193, name: "Malaidar Lassi", price: 129 },
+            { id: 7194, name: "Masala Chaas", price: 100 },
+          ],
+
+          /* Accompaniments */
+          "Accompaniments": [
+            { id: 7200, name: "Masala Papad", price: 119 },
+            { id: 7201, name: "Roasted Papad", price: 89 },
+          ],
+
+          /* Soups */
+          "Soups - Thick 'n' Thin": [
+            { id: 7210, name: "Tamatar Shorba", price: 155 },
+            { id: 7211, name: "Vegetable Shorba", price: 155 },
+          ],
+          "Soups - Chinese": [
+            { id: 7212, name: "Clear Noodle Soup", price: 175 },
+            { id: 7213, name: "Hot And Sour Soup", price: 155 },
+            { id: 7214, name: "Lemon Coriander Soup", price: 155 },
+            { id: 7215, name: "Momo Soup", price: 185 },
+            { id: 7216, name: "Sweet Corn Soup", price: 155 },
+            { id: 7217, name: "Tomato Soup", price: 155 },
+            { id: 7218, name: "Tomyum Soup", price: 175 },
+            { id: 7219, name: "Veg Manchow Soup", price: 155 },
+          ],
+          "Soups - Italian": [
+            { id: 7220, name: "Zuppa Di Broccoli", price: 185 },
+            { id: 7221, name: "Creamy Vegetable With Cheese", price: 175 },
+            { id: 7222, name: "Hot Basil Pomedero Soup", price: 175 },
+            { id: 7223, name: "Vegetable Risotto Soup", price: 185 },
+          ],
+
+          /* Salads */
+          "Salads": [
+            { id: 7230, name: "Chef Special Salad", price: 239 },
+            { id: 7231, name: "Classic Caesar Salad", price: 239 },
+            { id: 7232, name: "Corn And Pepper Salad", price: 239 },
+            { id: 7233, name: "Garden Fresh Salad", price: 119 },
+          ],
+
+          /* Italiano Mainfare */
+          "Italiano Mainfare": [
+            { id: 7240, name: "Cheese Quesadillas", price: 335 },
+            { id: 7241, name: "Enchiladas With Beans", price: 315 },
+            { id: 7242, name: "Enchiladas With Corn", price: 335 },
+            { id: 7243, name: "Enchiladas With Paneer", price: 335 },
+            { id: 7244, name: "Vegetable Quesadillas", price: 345 },
+          ],
+
+          /* Thin Crust Pizza - 6" */
+          "Thin Crust Pizza - 6\"": [
+            { id: 7250, name: "Barbeque Paneer", price: 235, desc: "BBQ paneer, onion, jalapeño & peppers." },
+            { id: 7251, name: "Pizza Nepoli", price: 249, desc: "Tomato sauce, onion, capsicum, sundried tomato, jalapeño & mozzarella." },
+            { id: 7252, name: "Chef Special Pizza", price: 265, desc: "Selected tossed vegetables, tomato sauce & cheese." },
+            { id: 7253, name: "Corn Florentine", price: 235, desc: "White sauce, mozzarella, spinach, corn & garlic flakes." },
+            { id: 7254, name: "Macaroni Pizzata", price: 315, desc: "Pasta sauce, broccoli, corn, spinach, macaroni & mozzarella." },
+            { id: 7255, name: "Manali Pizza", price: 235, desc: "American corn, bell pepper, onion & olives." },
+            { id: 7256, name: "Margarita Pizza", price: 215, desc: "Classic tomato, cheese & basil." },
+            { id: 7257, name: "Mexican Pizza", price: 249, desc: "Spicy sauce, capsicum, mushrooms, refried beans & onion." },
+            { id: 7258, name: "Pizza Italiana", price: 315, desc: "Spicy sauce, mozzarella, zucchini, sundried tomatoes, cherry tomato & capsicum." },
+            { id: 7259, name: "Pizza Milano", price: 235, desc: "Tomato sauce, mozzarella, spinach, sundried tomato & olives." },
+            { id: 7260, name: "Sicilia Pizza", price: 235, desc: "Tomato sauce, mushrooms, garlic, sundried tomato, chilli & basil." },
+          ],
+
+          /* Pasta And More */
+          "Pasta And More": [
+            { id: 7270, name: "Pesto Pasta", price: 369, desc: "Broccoli & cherry tomato in pesto & cream." },
+            { id: 7271, name: "Al Arrabbiata", price: 385, desc: "Spicy tomato, olive oil, garlic." },
+            { id: 7272, name: "Alfredo Pasta", price: 369, desc: "Classic creamy parmesan sauce." },
+            { id: 7273, name: "Gambaza Pasta", price: 385, desc: "Cream sauce with mushroom & asparagus." },
+            { id: 7274, name: "Lasagne", price: 385, desc: "Veg layered with traditional sauce." },
+            { id: 7275, name: "Macaroni Cheese Casserole", price: 395, desc: "Italian veggies & macaroni, cheesy Japatto sauce." },
+            { id: 7276, name: "Masala Mafia", price: 369, desc: "Roasted bell pepper sauce, Indian herbs." },
+            { id: 7277, name: "Pasta Barbaresca", price: 395, desc: "Creamy tomato with broccoli, tomatoes & sundried tomato." },
+            { id: 7278, name: "Spaghetti Aglio E Olio", price: 359, desc: "Olive oil, garlic & chilli flakes." },
+          ],
+
+          /* Dal */
+          "Dal": [
+            { id: 7280, name: "Chef's Special Dal Tadka", price: 269 },
+            { id: 7281, name: "Dal Jalpaan", price: 289 },
+            { id: 7282, name: "Dal Palak", price: 269 },
+            { id: 7283, name: "Dal Methi", price: 269 },
+            { id: 7284, name: "Dal Tadka", price: 269 },
+          ],
+
+          /* Rotiyon Ki Farmaish */
+          "Rotiyon Ki Farmaish": [
+            { id: 7290, name: "Aloo Kulcha", price: 89 },
+            { id: 7291, name: "Aloo Paratha", price: 89 },
+            { id: 7292, name: "Amritsari Masala Kulcha", price: 115 },
+            { id: 7293, name: "Butter Kulcha", price: 65 },
+            { id: 7294, name: "Butter Naan", price: 69 },
+            { id: 7295, name: "Butter Paratha", price: 65 },
+            { id: 7296, name: "Butter Roti", price: 59 },
+            { id: 7297, name: "Cheese Chilli Naan", price: 119 },
+            { id: 7298, name: "Cheese Naan", price: 109 },
+            { id: 7299, name: "Churchur Naan", price: 115 },
+            { id: 7300, name: "Garlic Naan", price: 99 },
+            { id: 7301, name: "Garlic Roti", price: 75 },
+            { id: 7302, name: "Green Chilli Roti", price: 79 },
+            { id: 7303, name: "Kulcha Plain", price: 59 },
+            { id: 7304, name: "Makki Di Roti", price: 79 },
+            { id: 7305, name: "Millet Roti (Multi Grain Roti)", price: 79 },
+            { id: 7306, name: "Missi Roti", price: 89 },
+            { id: 7307, name: "Naan Plain", price: 65 },
+            { id: 7308, name: "Onion Kulcha", price: 89 },
+            { id: 7309, name: "Paneer Kulcha", price: 99 },
+            { id: 7310, name: "Paratha Plain", price: 59 },
+            { id: 7311, name: "Roti Ki Tokri", price: 289 },
+            { id: 7312, name: "Roti Plain", price: 55 },
+            { id: 7313, name: "Veg Stuff Paratha", price: 99 },
+          ],
+
+          /* Cool Raita */
+          "Cool Raita": [
+            { id: 7320, name: "Aloo Raita", price: 129 },
+            { id: 7321, name: "Boondi Raita", price: 129 },
+            { id: 7322, name: "Mix Raita", price: 129 },
+            { id: 7323, name: "Pineapple Raita", price: 129 },
+            { id: 7324, name: "Simply Curd", price: 85 },
+          ],
+
+          /* Just Desserts */
+          "Just Desserts": [
+            { id: 7330, name: "Carrot Halwa", price: 185 },
+            { id: 7331, name: "Litchi Ki Teheri", price: 219 },
+            { id: 7332, name: "Shahi Tukda", price: 219 },
+            { id: 7333, name: "Carrot Halwa With Ice Cream", price: 229 },
+            { id: 7334, name: "Choco Punch Sundae", price: 229 },
+            { id: 7335, name: "Dry Fruit Carnival", price: 229 },
+            { id: 7336, name: "Gulab Jamoon", price: 119 },
+            { id: 7337, name: "Gulab Jamoon With Ice Cream", price: 165 },
+            { id: 7338, name: "Kiddo Sundae", price: 195 },
+          ],
+
+          /* Choice Of Ice Cream */
+          "Choice Of Ice Cream": [
+            { id: 7340, name: "Afghani Dry Fruit Ice Cream", price: 150 },
+            { id: 7341, name: "Butterscotch Ice Cream", price: 129 },
+            { id: 7342, name: "Chef Special Sundae", price: 180 },
+            { id: 7343, name: "Chocolate Ice Cream", price: 129 },
+            { id: 7344, name: "Cookie & Cream Ice Cream", price: 150 },
+            { id: 7345, name: "Kesar Pista Ice Cream", price: 150 },
+            { id: 7346, name: "Mango Ice Cream", price: 150 },
+            { id: 7347, name: "Pista Green Ice Cream", price: 139 },
+            { id: 7348, name: "Roasted Almond Ice Cream", price: 149 },
+            { id: 7349, name: "Special Flavour Scoop", price: 150 },
+            { id: 7350, name: "Strawberry Ice Cream", price: 129 },
+            { id: 7351, name: "Super Cassata Ice Cream", price: 175 },
+            { id: 7352, name: "Vanilla Ice Cream", price: 129 },
+          ],
+        },
+      },
+    };
+
+   
+    /***********************
+     * STATE
+     ***********************/
+    let activeKey = 'amrutha';
+    let activeCategory = Object.keys(restaurants[activeKey].categories)[0];
+    let searchQuery = '';
+    const quantities = new Map(); // key: itemId => qty
+
+    /***********************
+     * HELPERS
+     ***********************/
+    const el = (sel) => document.querySelector(sel);
+
+    function formatINR(n){ return `₹${n}`; }
+
+    function computeTotals() {
+      let totalItems = 0, totalPrice = 0;
+      const allCats = restaurants[activeKey].categories;
+      Object.values(allCats).flat().forEach(item => {
+        const q = quantities.get(item.id) || 0;
+        totalItems += q;
+        totalPrice += q * item.price;
+      });
+      return { totalItems, totalPrice };
+    }
+
+    function whatsappLink(name) {
+      const { totalItems, totalPrice } = computeTotals();
+      if (totalItems === 0) return '';
+      const lines = [];
+      const allCats = restaurants[activeKey].categories;
+      Object.values(allCats).flat().forEach(item => {
+        const q = quantities.get(item.id) || 0;
+        if (q > 0) lines.push(`${q} x ${item.name} — ₹${q * item.price}`);
+      });
+      const msg = `Hello, I'd like to order from ${name}:\n${lines.join('\n')}\nTotal: ₹${totalPrice}`;
+      return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+    }
+
+    function inc(id, delta) {
+      const cur = quantities.get(id) || 0;
+      const next = Math.max(0, cur + delta);
+      quantities.set(id, next);
+      renderMenu(); // re-render counts & totals
+    }
+
+    /***********************
+     * RENDER
+     ***********************/
+    function renderTabs() {
+      const tabs = el('#tabs');
+      tabs.innerHTML = '';
+      Object.entries(restaurants).forEach(([key, meta]) => {
+        const b = document.createElement('button');
+        b.className = 'tab-btn' + (key === activeKey ? ' active' : '');
+        b.textContent = meta.label;
+        b.onclick = () => {
+          activeKey = key;
+          activeCategory = Object.keys(restaurants[activeKey].categories)[0];
+          searchQuery = '';
+          renderTabs();          // keep active highlight in sync
+          renderCategoryBar();
+          renderMenu();
+        };
+        tabs.appendChild(b);
+      });
+    }
+
+    function renderCategoryBar() {
+      const bar = el('#categoryBar');
+      const cats = Object.keys(restaurants[activeKey].categories);
+      bar.innerHTML = '';
+      cats.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'pill' + (cat === activeCategory ? ' active' : '');
+        btn.textContent = cat;
+        btn.onclick = () => { activeCategory = cat; searchQuery=''; renderMenu(); renderCategoryBar(); };
+        bar.appendChild(btn);
+      });
+    }
+
+    function renderMenu() {
+      const card = el('#menuCard');
+      const restaurant = restaurants[activeKey];
+      const items = restaurant.categories[activeCategory] || [];
+
+      // Header
+      const { totalItems, totalPrice } = computeTotals();
+      const header = `
+        <div class="head">
+          <div>
+            <div class="title">${restaurant.label} — ${activeCategory}</div>
+            <div class="tagline">${activeCategory} • ${restaurant.taglineHint}</div>
+          </div>
+          <div class="totals">
+            <div class="items">Items: <strong>${totalItems}</strong></div>
+            <div class="price">${formatINR(totalPrice)}</div>
+          </div>
+        </div>
+        <div class="search">
+          <input id="searchInput" placeholder="Search items..." value="${searchQuery.replace(/"/g,'&quot;')}" />
+        </div>
+      `;
+
+      // List
+      const q = searchQuery.trim().toLowerCase();
+      const visible = items.filter(i => i.name.toLowerCase().includes(q));
+      let list = '';
+      if (visible.length === 0) {
+        list = `<div class="subtle">No items found.</div>`;
+      } else {
+        list = visible.map(i => `
+          <div class="item">
+            <div class="flex-1">
+              <div class="name">${i.name}</div>
+              <div class="price">₹${i.price}</div>
+              ${i.desc ? `<div class="desc">${i.desc}</div>` : ''}
+            </div>
+            <div class="qty">
+              <button class="btn" data-dec="${i.id}">➖</button>
+              <div class="num">${quantities.get(i.id) || 0}</div>
+              <button class="btn" data-inc="${i.id}">➕</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // View selected
+      let selectedLines = [];
+      Object.values(restaurants[activeKey].categories).flat().forEach(it => {
+        const qSel = quantities.get(it.id) || 0;
+        if (qSel > 0) selectedLines.push(`${qSel} × ${it.name} — ₹${qSel * it.price}`);
+      });
+      const hasSel = selectedLines.length > 0;
+      const view = hasSel ? `
+        <div class="view">
+          <button class="view-toggle" id="toggleView">View Items</button>
+          <div class="view-box" id="viewBox" style="display:none;">
+            <h3>Selected items</h3>
+            <ul>${selectedLines.map(l => `<li>${l}</li>`).join('')}</ul>
+          </div>
+        </div>
+      ` : '';
+
+      // Footer
+      const wa = whatsappLink(`${restaurant.label} — ${activeCategory}`);
+      const ctaClass = hasSel ? 'cta enabled' : 'cta disabled';
+      const ctaHref = hasSel ? wa : 'javascript:void(0)';
+
+      const footer = `
+        <div class="footer">
+          <a class="${ctaClass}" id="waBtn" href="${ctaHref}" target="_blank" rel="noopener">Send on WhatsApp</a>
+          <button class="reset" id="resetBtn">Reset</button>
+        </div>
+      `;
+
+      card.innerHTML = header + list + view + footer;
+
+      // wire search
+      el('#searchInput').oninput = (e) => { searchQuery = e.target.value; renderMenu(); };
+
+      // wire +/- buttons
+      card.querySelectorAll('[data-inc]').forEach(btn=>{
+        btn.onclick = ()=> inc(parseInt(btn.dataset.inc,10), +1);
+      });
+      card.querySelectorAll('[data-dec]').forEach(btn=>{
+        btn.onclick = ()=> inc(parseInt(btn.dataset.dec,10), -1);
+      });
+
+      // view toggle
+      const toggle = el('#toggleView');
+      if (toggle) {
+        const box = el('#viewBox');
+        toggle.onclick = () => {
+          box.style.display = box.style.display === 'none' ? 'block' : 'none';
+          toggle.textContent = box.style.display === 'none' ? 'View Items' : 'Hide Items';
+        };
+      }
+
+      // reset
+      el('#resetBtn').onclick = () => {
+        quantities.clear();
+        renderMenu();
+      };
+    }
+
+    /***********************
+     * INIT
+     ***********************/
+    (function init(){
+      renderTabs();
+      renderCategoryBar();
+      renderMenu();
+
+      // Smoke tests (console)
+      (function DevTests(){
+        const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hello\nTotal: ₹0')}`;
+        console.assert(url.startsWith(`https://wa.me/${WA_NUMBER}?text=`), 'WA number should be correct');
+        const decoded = decodeURIComponent(url.split('text=')[1]);
+        console.assert(decoded.includes('\n') && decoded.includes('Total:'), 'WA message should contain newline and "Total:"');
+        const arr = ['Masala Dosa','paneer','NOODLES'];
+        const q = 'noo';
+        console.assert(arr.filter(s=>s.toLowerCase().includes(q)).length===1,'case-insensitive search sanity');
+      })();
+    })();
+  </script>
+  
+  
+  <!-- ===== Disclaimer (non-destructive append) ===== -->
+<script>
+(function(){
+  // Inject minimal styles without editing existing CSS
+  const css = `
+    .legal-disclaimer{
+      max-width:1100px; margin:18px auto 24px; padding:14px 16px;
+      background:linear-gradient(180deg,#e0f2fe,#f8fafc);
+      border:1px solid #dbeafe; border-radius:12px; color:#0c4a6e;
+      box-shadow:0 2px 8px rgba(56,189,248,.1); font-size:13px; line-height:1.4;
+    }
+    .legal-disclaimer b{ font-weight:700 }
+    .legal-disclaimer ul{ margin:8px 0 0; padding-left:18px }
+    .legal-disclaimer li{ margin:4px 0 }
+  `;
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  // Build the disclaimer block
+  const sec = document.createElement('section');
+  sec.className = 'legal-disclaimer';
+  sec.innerHTML = `
+    <b>Disclaimer — Menu, Pricing & Availability</b>
+    <ul>
+      <li>Items and availability may vary by time and location.</li>
+      <li>Prices are in ₹; taxes and packaging/delivery charges may apply.</li>
+      <li>Descriptions and offers are subject to change without notice.</li>
+      
+     <li>Menu details are compiled from <b>publicly available data</b> .</li>
+      <li>Prices may include small service or delivery charges added by Loop5 to support operations.
+Loop5 is an independent delivery service and is not affiliated with or endorsed by any restaurant or brand.
+All trademarks are property of their respective owners.
+      <li>Preparation/delivery times are estimates; final confirmation will be shared after order acknowledgment on WhatsApp.</li>
+      <li>Errors & omissions excepted (E&OE). Last updated: <span id="disc-date"></span></li>
+    </ul>
+  `;
+
+  // Append to end of body
+  document.body.appendChild(sec);
+
+  // Set a friendly last-updated date
+  const d = new Date();
+  const fmt = d.toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'2-digit' });
+  document.getElementById('disc-date').textContent = fmt;
+})();
+</script>
+
+  
+  
+</body>
+</html>
